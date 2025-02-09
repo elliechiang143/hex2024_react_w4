@@ -1,0 +1,83 @@
+import axios from 'axios';
+import { useState } from 'react'
+import PropTypes from 'prop-types';
+
+const BASE_URL = import.meta.env.VITE_BASE_URL;
+
+function Login({setIsAuth}){
+  const [account, setAccount] = useState({
+    username: "",
+    password: ""
+  })
+
+  const handleInputChange = (e) =>{
+    const {value, name} = e.target;
+    setAccount({
+      ...account,
+      [name]: value
+    })
+  }
+
+  const handleLogin = (e) =>{
+    e.preventDefault();
+    axios.post(`${BASE_URL}/admin/signin`, account)
+    .then((res) =>{
+      const {token, expired} = res.data;
+      document.cookie = `hexToken=${token}; expires=${new Date(expired)}`;
+
+      axios.defaults.headers.common['Authorization'] = token;
+      // getProductList();
+      setIsAuth(true);
+    })
+    .catch((error) =>{
+      // alert('登入失敗')
+      console.log('登入失敗')
+    })
+  }
+
+  // useEffect(() => {
+  //   const checkUserLogin = async() => {
+  //     try {
+  //       await axios.post(`${BASE_URL}/api/user/check`);
+  //       getProductList();
+  //       setIsAuth(true);
+  //     } catch (error) {
+  //       // console.error(error)
+  //       console.log('尚未登入')
+  //     }
+  //   };
+
+  //   const token = document.cookie.replace(
+  //     /(?:(?:^|.*;\s*)hexToken\s*=\s*([^;]*).*$)|^.*$/,
+  //     "$1"
+  //   );
+  //   axios.defaults.headers.common['Authorization'] = token;
+  //   checkUserLogin();
+  // }, [])
+
+  return (
+    <div className="d-flex flex-column justify-content-center align-items-center vh-100">
+      <h1 className="mb-5">請先登入</h1>
+      <form onSubmit={handleLogin} className="d-flex flex-column gap-3">
+        <div className="form-floating mb-3">
+          <input name="username" value={account.username} onChange={handleInputChange} type="email" className="form-control" id="username" placeholder="name@example.com" />
+          <label htmlFor="username">Email address</label>
+        </div>
+        <div className="form-floating">
+          <input name="password" value={account.password} onChange={handleInputChange} type="password" className="form-control" id="password" placeholder="password" />
+          <label htmlFor="password">Password</label>
+        </div>
+        <button className="btn btn-primary">登入</button>
+      </form>
+      <p className="mt-5 mb-3 text-muted">&copy; 2024~∞ - 六角學院</p>
+    </div>
+  )
+}
+
+// 物件下的 propTypes 屬性
+Login.propTypes = {
+  // 函式庫方法
+  setIsAuth: PropTypes.func,
+}
+
+export default Login;

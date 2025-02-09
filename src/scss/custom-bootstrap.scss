@@ -1,0 +1,11 @@
+// 1. 匯入 Bootstrap 的核心變數檔案
+@import "bootstrap/scss/functions";
+@import "bootstrap/scss/variables";
+@import "bootstrap/scss/mixins";
+
+// 2. 客製化 Bootstrap 變數（需放在匯入 Bootstrap SCSS 之前）
+// $primary: #333;  // 修改主要顏色
+// $secondary: #6c757d;
+
+// 3. 匯入 Bootstrap 主要樣式（這樣就能應用自訂變數）
+@import "bootstrap/scss/bootstrap";
