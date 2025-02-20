@@ -74,12 +74,12 @@ function ProductList(){
     }
 
     setIsProductModalOpen(true);
-    console.log(isProductModalOpen)
+    // console.log(isProductModalOpen)
   }
 
-  useEffect(() => {
-    console.log(isProductModalOpen)
-  },[])
+  // useEffect(() => {
+  //   console.log(isProductModalOpen)
+  // },[isProductModalOpen])
 
   const handleOpenDeleteProductModal = (product) => {
     setTempProduct(product);
@@ -163,7 +163,7 @@ function ProductList(){
       modalMode={modalMode} 
       tempProduct={tempProduct} 
       getProductList={getProductList}
-      isOpen={setIsProductModalOpen}
+      isOpen={isProductModalOpen}
       setIsOpen={setIsProductModalOpen}
     />
 

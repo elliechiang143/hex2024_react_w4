@@ -1,6 +1,7 @@
 import axios from 'axios';
 import { useEffect, useRef, useState } from 'react'
 import { Modal } from 'bootstrap';
+import PropTypes from 'prop-types';
 
 const BASE_URL = import.meta.env.VITE_BASE_URL;
 const API_PATH = import.meta.env.VITE_API_PATH;
@@ -28,7 +29,7 @@ function ProductModal({
     new Modal(productModalRef.current);
   }, [])
 
-  useEffect(()=> {
+  useEffect(() => {
     if(isOpen){
       const modalInstance = Modal.getInstance(productModalRef.current)
       modalInstance.show();
@@ -40,6 +41,23 @@ function ProductModal({
     modalInstance.hide();
     setIsOpen(false);
   }
+
+  // 監聽 hidden.bs.modal 事件，當 Modal 被關閉時，自動執行 setIsOpen(false)，確保 isOpen 狀態同步。
+  // 當 useEffect 重新執行或組件卸載時，React 會執行 return 內的 removeEventListener，確保監聽器被清除。
+  useEffect(() => {
+    const modalElement = productModalRef.current;
+    const handleModalHidden = () => setIsOpen(false);
+
+    if (modalElement) {
+      modalElement.addEventListener("hidden.bs.modal", handleModalHidden);
+    }
+
+    return () => {
+      if (modalElement) {
+        modalElement.removeEventListener("hidden.bs.modal", handleModalHidden);
+      }
+    };
+  }, [setIsOpen])
 
   const handleModalInputChange = (e) => {
     const {value, name, checked, type} = e.target;
@@ -363,5 +381,14 @@ function ProductModal({
     </>
   )
 }
+
+ProductModal.propTypes = {
+  modalMode: PropTypes.string,
+  tempProduct: PropTypes.object,
+  getProductList: PropTypes.func,
+  isOpen: PropTypes.bool,
+  setIsOpen: PropTypes.func
+}
+
 
 export default ProductModal;
